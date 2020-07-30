@@ -1,0 +1,6 @@
+#filter file
+*.pyc
+/__pycache__
+/.idea
+/.vscode
+.DS_store

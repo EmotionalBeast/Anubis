@@ -16,7 +16,9 @@ class Config(object):
         return tmp
 
 class ConfigJson(Config):
-    def getDic(self):
+
+    @property
+    def jsonDic(self):
         dic = {}
         dic = json.dumps(self.content, strict=False)
         return dic

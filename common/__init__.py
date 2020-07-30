@@ -6,3 +6,4 @@ __VERSION__ = "1.0.0"
 from .config import Config, ConfigJson
 from .email import Mail
 from .request import Request
+from .log import LogHandler
