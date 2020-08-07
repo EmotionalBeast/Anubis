@@ -1,2 +1,4 @@
 locust
 PyQt5
+pillow
+

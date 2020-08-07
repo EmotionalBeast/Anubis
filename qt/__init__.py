@@ -7,3 +7,4 @@ VERSION = "1.0.0"
 
 from .mainwindow import *
 from .mainwindowui import *
+from .handler import *

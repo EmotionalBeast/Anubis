@@ -16,7 +16,6 @@ class Config(object):
         return tmp
 
 class ConfigJson(Config):
-
     @property
     def jsonDic(self):
         dic = {}

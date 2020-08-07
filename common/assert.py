@@ -3,7 +3,7 @@
 # @email: none
 # @date: 2020/07/29 17:46
 
-from common.request import Request
+from request import Request
 
 
 class Assert(Request):
