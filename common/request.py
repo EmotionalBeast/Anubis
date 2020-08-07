@@ -33,6 +33,7 @@ class Request(object):
         try:
             dic['body'] = response.json()
         except Exception as e:
+            print(e)
             dic['body'] = 'None'
         dic['text'] = response.text
         dic['time_consuming'] = response.elapsed.microseconds/1000
