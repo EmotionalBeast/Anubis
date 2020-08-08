@@ -38,6 +38,17 @@ class TreeWidgetHandler(object):
     def checkItem(self):
         pass
 
+class ComBoxHandler(object):
+
+    itemList = ["get", "post"]
+
+    def __init__(self, comBox):
+        self.comBox = comBox
+        self.comBox.addItems(itemList)
+
+    def itemList(self):
+        pass
+
 
 
 

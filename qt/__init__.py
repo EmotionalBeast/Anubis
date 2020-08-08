@@ -5,6 +5,6 @@
 
 VERSION = "1.0.0"
 
-from .mainwindow import *
-from .mainwindowui import *
-from .handler import *
+from .mainwindow import MainWindow
+from .mainwindowui import Ui_MainWindow
+from .handler import TreeWidgetHandler

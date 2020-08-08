@@ -7,12 +7,21 @@ import json, os, requests, random
 
 
 class Request(object):
-    def __init__(self):
-        pass
 
-    def get(self, url, data, headers):
+    def __init__(self, dic):
+        self.dic = dic
+    
+    def switchMethod(self):
+        if self.dic["method"] == "get":
+            return self.get(self.dic["url"], self.dic["params"])
+        if self.dic["method"] == "post":
+            return self.post(self.dic["url"], self.dic["params"])
+
+        
+    def get(self, url, params):
         dic = {}
-        response = requests.get(url, data=data, headers=headers, verify=False)
+        response = requests.get(url, params=params, verify=False)
+        dic["headers"] = response.headers()
 
         dic["code"] = response.status_code
         try:
@@ -26,9 +35,9 @@ class Request(object):
 
         return dic
 
-    def post(self, url, data, headers):
+    def post(self, url, params):
         dic = {}
-        response = requests.post(url, json=data, headers=headers, verify=False)
+        response = requests.post(url, data=params, verify=False)
         dic["code"] = response.status_code
         try:
             dic['body'] = response.json()
@@ -41,7 +50,8 @@ class Request(object):
 
         return dic
 
-    def put(self, url, data, headers, file_param, file, f_type):
+    
+    def put(self, url, params, headers, file_param, file, f_type):
         pass
         
 
