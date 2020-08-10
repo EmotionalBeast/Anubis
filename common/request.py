@@ -21,7 +21,9 @@ class Request(object):
     def get(self, url, params):
         dic = {}
         response = requests.get(url, params=params, verify=False)
-        dic["headers"] = response.headers()
+        dic["headers"] = {}
+        dic["headers"] = response.headers
+        
 
         dic["code"] = response.status_code
         try:

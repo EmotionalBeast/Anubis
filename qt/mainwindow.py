@@ -26,6 +26,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     def showResult(self):
         self.label_4.setText("状态: %s, 耗时: %ss" %(self.responseDic["code"], self.responseDic["time_total"]))
+        self.initHeadersTab(self.responseDic["headers"])
         
 
     def getData(self):

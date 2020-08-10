@@ -71,13 +71,13 @@ class Ui_MainWindow(object):
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
         self.tabWidget.setGeometry(QtCore.QRect(400, 530, 590, 370))
         self.tabWidget.setObjectName("tabWidget")
-        self.tab = QtWidgets.QWidget()
-        self.tab.setObjectName("tab")
-        self.tabWidget.addTab(self.tab, "")
+        # self.tab = QtWidgets.QWidget()
+        # self.tab.setObjectName("tab")
+        # self.tabWidget.addTab(self.tab, "")
 
-        self.tab_2 = QtWidgets.QWidget()
-        self.tab_2.setObjectName("tab_2")
-        self.tabWidget.addTab(self.tab_2, "")
+        # self.tab_2 = QtWidgets.QWidget()
+        # self.tab_2.setObjectName("tab_2")
+        # self.tabWidget.addTab(self.tab_2, "")
 
         self.treeWidget = QtWidgets.QTreeWidget(self.centralwidget)
         self.treeWidget.setGeometry(QtCore.QRect(0, 0, 390, 900))
@@ -123,32 +123,36 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "参数"))
         self.label_3.setText(_translate("MainWindow", "结果"))
         self.pushButton.setText(_translate("MainWindow", "运行"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Tab 1"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Tab 2"))
         self.menuFile.setTitle(_translate("MainWindow", "文件"))
         self.actionNew.setText(_translate("MainWindow", "新建"))
         self.menuTools.setTitle(_translate("MainWindow", "工具"))
         self.actionStress.setText(_translate("MainWindow", "压力测试"))
 
-    def initJsonTab(self, headers):
-        #数据解析部分
-        self.model = QtGui.QStandardItemModel(len(headers.keys()), 2)
-
-
-        #UI显示部分
-        self.tab_1 = QtWidgets.QWidget()
-        self.tab_1.setObjectName("tab_1")
-        self.tableView = QtWidgets.QTableView(self.tab_1)
-        self.tableView.horizontalHeader().setVisible(False)
-        self.tableView.verticalHeader().setVisible(False)
-        self.tableView.setShowGrid(False)
-        self.tableView.setModel(self.model)
+    def initJsonTab(self):
+        pass
         
     def initImageTab(self):
         pass
 
-    def initHeadersTab(self):
-        pass
+    def initHeadersTab(self, headers):
+        #数据解析部分
+        keys = list(headers.keys())
+        row = len(keys)
+        self.model = QtGui.QStandardItemModel(row, 2)
+        for i in range(row):
+            name = QtGui.QStandardItem(keys[i])
+            value = QtGui.QStandardItem(headers[keys[i]])
+            self.model.setItem(i, 0, name)
+            self.model.setItem(i, 1, value)
+        #UI显示部分
+        self.tab_1 = QtWidgets.QWidget()
+        self.tab_1.setObjectName("tab_1")
+        self.tabWidget.addTab(self.tab_1, "Header")
+        self.tableView = QtWidgets.QTableView(self.tab_1)        
+        self.tableView.horizontalHeader().setVisible(False)
+        self.tableView.verticalHeader().setVisible(False)
+        self.tableView.setShowGrid(False)
+        self.tableView.setModel(self.model)
 
     def initTextTab(self):
         pass
