@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-
+import json
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 COMBOX_ITEM_LIST = ["get", "post"]
@@ -128,8 +128,19 @@ class Ui_MainWindow(object):
         self.menuTools.setTitle(_translate("MainWindow", "工具"))
         self.actionStress.setText(_translate("MainWindow", "压力测试"))
 
-    def initJsonTab(self):
-        pass
+    def initJsonTab(self, dic):
+        #数据解析部分
+        jsonStr = str(dic)
+
+        #UI显示部分
+        self.tab_2 = QtWidgets.QTableView()
+        self.tab_2.setObjectName("tab_2")
+        self.textBrowser = QtWidgets.QTextBrowser(self.tab_2)
+        self.textBrowser.setObjectName("textBrowser")
+        self.textBrowser.setGeometry(QtCore.QRect(0, 0, 590, 370))
+        self.textBrowser.setText(jsonStr)
+        self.tabWidget.addTab(self.tab_2, "Json")
+
         
     def initImageTab(self):
         pass
@@ -147,12 +158,15 @@ class Ui_MainWindow(object):
         #UI显示部分
         self.tab_1 = QtWidgets.QWidget()
         self.tab_1.setObjectName("tab_1")
-        self.tabWidget.addTab(self.tab_1, "Header")
-        self.tableView = QtWidgets.QTableView(self.tab_1)        
+        self.tableView = QtWidgets.QTableView(self.tab_1)
+        self.tableView.setObjectName("tableView")
+        self.tableView.setModel(self.model) 
+        self.tableView.setGeometry(QtCore.QRect(0, 0, 590, 370))        
         self.tableView.horizontalHeader().setVisible(False)
         self.tableView.verticalHeader().setVisible(False)
-        self.tableView.setShowGrid(False)
-        self.tableView.setModel(self.model)
+        self.tableView.setShowGrid(False)              
+        self.tableView.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.tabWidget.addTab(self.tab_1, "Header")
 
     def initTextTab(self):
         pass
