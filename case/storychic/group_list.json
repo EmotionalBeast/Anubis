@@ -1,0 +1,7 @@
+{
+    "method": "get",
+    "url": "http://cpi.ufotosoft.com/storyart/ncrnau/res/getSecRes",
+    "params":{
+        "refId": "234"
+    }
+}

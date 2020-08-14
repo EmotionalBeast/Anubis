@@ -1,0 +1,12 @@
+{
+    "method": "get",
+    "url" : "http://cpi.ufotosoft.com/storyart/ncrnau/res/getResourceList",
+    "params":{
+        "page": "1",
+        "pageSize": "999",
+        "pkg": "instagramstory.maker.unfold",
+        "rt": "7,9,12",
+        "st": "2",
+        "ver": "1008"
+    }
+}

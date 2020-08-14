@@ -13,6 +13,7 @@ COMBOX_ITEM_LIST = ["get", "post"]
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        self.index = 0
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1000, 900)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -130,7 +131,8 @@ class Ui_MainWindow(object):
 
     def initJsonTab(self, dic):
         #数据解析部分
-        jsonStr = str(dic)
+        # jsonStr = str(dic)
+        jsonStr = json.dumps(dic, sort_keys=True, indent=2, ensure_ascii=False)
 
         #UI显示部分
         self.tab_2 = QtWidgets.QTableView()
@@ -138,7 +140,8 @@ class Ui_MainWindow(object):
         self.textBrowser = QtWidgets.QTextBrowser(self.tab_2)
         self.textBrowser.setObjectName("textBrowser")
         self.textBrowser.setGeometry(QtCore.QRect(0, 0, 590, 370))
-        self.textBrowser.setText(jsonStr)
+        self.textBrowser.setVerticalScrollBarPolicy(True)
+        self.textBrowser.setPlainText(jsonStr)
         self.tabWidget.addTab(self.tab_2, "Json")
 
         
@@ -165,7 +168,7 @@ class Ui_MainWindow(object):
         self.tableView.horizontalHeader().setVisible(False)
         self.tableView.verticalHeader().setVisible(False)
         self.tableView.setShowGrid(False)              
-        self.tableView.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.tableView.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
         self.tabWidget.addTab(self.tab_1, "Header")
 
     def initTextTab(self):
@@ -173,4 +176,29 @@ class Ui_MainWindow(object):
     
     def initContentTab(self):
         pass
+
+    def initTabWidget(self, response):
+        if self.index > 0:
+            self.tabWidget.close()
+            self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
+            self.tabWidget.setGeometry(QtCore.QRect(400, 530, 590, 370))
+            self.tabWidget.setObjectName("tabWidget")
+        self.label_4.setText("状态: %s, 耗时: %ss" %(response["code"], response["time_total"]))
+        self.initHeadersTab(response["headers"])
+        if response["type"].split(";")[0] == "application/json":
+            self.initJsonTab(response["body"])
+        
+        # if response["type"].split("/")[0] == "image":
+        #     self.initImageTab(reponse["type"]) ==
+        
+        # if response[""]
+        
+        self.index += 1
+        self.tabWidget.show()
+
+
+
+
+        
+        
 

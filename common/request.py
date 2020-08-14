@@ -23,8 +23,7 @@ class Request(object):
         response = requests.get(url, params=params, verify=False)
         dic["headers"] = {}
         dic["headers"] = response.headers
-        
-
+        dic["type"] = dic["headers"]["content-type"]
         dic["code"] = response.status_code
         try:
             dic['body'] = response.json()

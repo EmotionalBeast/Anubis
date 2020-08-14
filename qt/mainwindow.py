@@ -4,8 +4,8 @@
 # @date: 2020/07/29 16:13
 
 from qt.mainwindowui import Ui_MainWindow
-from PyQt5.QtWidgets import QMainWindow, QMessageBox
-from PyQt5.QtCore import  Qt
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QTableWidget, QTabWidget
+from PyQt5.QtCore import  Qt, QRect
 from qt.handler import TreeWidgetHandler
 from common.request import Request
 
@@ -26,8 +26,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     def showResult(self):
         self.label_4.setText("状态: %s, 耗时: %ss" %(self.responseDic["code"], self.responseDic["time_total"]))
-        self.initHeadersTab(self.responseDic["headers"])
-        self.initJsonTab(self.responseDic["body"])
+        self.initTabWidget(self.responseDic)
+
         
 
     def getData(self):
