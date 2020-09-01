@@ -8,6 +8,9 @@ from PyQt5.QtWidgets import QMainWindow, QMessageBox, QTableWidget, QTabWidget
 from PyQt5.QtCore import  Qt, QRect
 from qt.handler import TreeWidgetHandler
 from common.request import Request
+from qt.responsewindow import ResponseWindow
+from qt.stresswindow import StressWindow
+
 
 class MainWindow(QMainWindow, Ui_MainWindow):
 
@@ -25,8 +28,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         pass
     
     def showResult(self):
-        self.label_4.setText("状态: %s, 耗时: %ss" %(self.responseDic["code"], self.responseDic["time_total"]))
-        self.initTabWidget(self.responseDic)
+        if self.responseDic:
+            self.responseWindow = ResponseWindow(self.responseDic)
+            self.responseWindow.setWindowModality(Qt.ApplicationModal)
+            self.responseWindow.show()
+        else:
+            pass
 
         
 
@@ -41,7 +48,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.requestDic["params"][key] = value       
         self.requestDic["files"] = ""
         return self.requestDic
+
+    def save(self):
+        pass
     
+    def showStressWindow(self):
+        self.stressWindow = StressWindow()
+        self.stressWindow.setWindowModality(Qt.ApplicationModal)
+        self.stressWindow.show()
 
 
         

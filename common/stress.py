@@ -14,8 +14,18 @@ import locust
 -n  --num-request
 """
 
-class Stress(object):
-    #压力测试
+class StressRequest(object):
+    #压力测试主体
+    def __init__(self):
+        self.request_header = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36',
+    'Content-Type': 'application/json; charset=UTF-8',
+  }
+        self.request_url = ""
+        self.request_parms = []
+    
+
+class DrawChart(object):
     def __init__(self):
         pass
 
