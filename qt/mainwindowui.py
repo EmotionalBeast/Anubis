@@ -63,10 +63,10 @@ class Ui_MainWindow(object):
         self.pushButton.setObjectName("pushButton")
         self.pushButton.clicked.connect(self.run)
 
-        self.pushButton_1 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_1.setGeometry(QtCore.QRect(870, 750, 100, 30))
-        self.pushButton_1.setObjectName("pushButton_1")
-        self.pushButton_1.clicked.connect(self.save)
+        # self.pushButton_1 = QtWidgets.QPushButton(self.centralwidget)
+        # self.pushButton_1.setGeometry(QtCore.QRect(870, 750, 100, 30))
+        # self.pushButton_1.setObjectName("pushButton_1")
+        # self.pushButton_1.clicked.connect(self.save)
  
 
         self.treeWidget = QtWidgets.QTreeWidget(self.centralwidget)
@@ -113,12 +113,12 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "路径"))
         self.label_2.setText(_translate("MainWindow", "参数"))
         self.pushButton.setText(_translate("MainWindow", "发送"))
-        self.pushButton.setText(_translate("MainWindow", "保存"))
+        # self.pushButton_1.setText(_translate("MainWindow", "保存"))
         self.menuFile.setTitle(_translate("MainWindow", "文件"))
         self.actionNew.setText(_translate("MainWindow", "新建"))
         self.menuTools.setTitle(_translate("MainWindow", "工具"))
         self.actionStress.setText(_translate("MainWindow", "压力测试"))
-        self.actionStress.setShortcut(_translate("MainWindow", "Ctrl+Q"))
+        self.actionStress.setShortcut(_translate("MainWindow", "Ctrl+P"))
 
 
         
