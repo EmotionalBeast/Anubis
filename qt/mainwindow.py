@@ -9,8 +9,7 @@ from PyQt5.QtCore import  Qt, QRect
 from qt.handler import TreeWidgetHandler
 from common.request import Request
 from qt.responsewindow import ResponseWindow
-from qt.stresswindow import StressWindow
-
+from qt.webwindow import WebWindow
 
 class MainWindow(QMainWindow, Ui_MainWindow):
 
