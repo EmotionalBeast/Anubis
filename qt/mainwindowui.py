@@ -9,7 +9,7 @@
 import json
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-COMBOX_ITEM_LIST = ["get", "post"]
+METHOD = ["get", "post"]
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -24,39 +24,21 @@ class Ui_MainWindow(object):
         self.label.setGeometry(QtCore.QRect(400, 0, 60, 30))
         self.label.setObjectName("label")
 
-        self.comboBox = QtWidgets.QComboBox(self.centralwidget)
-        self.comboBox.setGeometry(QtCore.QRect(400, 40, 100, 30))
-        self.comboBox.setObjectName("comboBox")
-        self.comboBox.addItems(COMBOX_ITEM_LIST)
+        self.comboBox_1 = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBox_1.setGeometry(QtCore.QRect(400, 40, 100, 30))
+        self.comboBox_1.setObjectName("comboBox_1")
+        self.comboBox_1.addItems(METHOD)
 
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit.setGeometry(QtCore.QRect(520, 45, 460, 20))
         self.lineEdit.setObjectName("lineEdit")
 
-        self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(400, 100, 60, 30))
-        self.label_2.setObjectName("label_2")
-
         
-
-        self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableWidget.setGeometry(QtCore.QRect(400, 140, 590, 600))
-        self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(2)
-        self.tableWidget.setRowCount(19)
-        _translate = QtCore.QCoreApplication.translate
-        for i in range(2):
-            self.tableWidget.setColumnWidth(i, 283)
-            item = QtWidgets.QTableWidgetItem()
-            self.tableWidget.setHorizontalHeaderItem(i, item)
-        item = self.tableWidget.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Name"))
-        item = self.tableWidget.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Value"))
-
-        for i in range(19):
-            self.tableWidget.setItem(i, 0, QtWidgets.QTableWidgetItem())
-            self.tableWidget.setItem(i, 1, QtWidgets.QTableWidgetItem())
+        self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
+        self.tabWidget.setGeometry(QtCore.QRect(400, 140, 590, 351))
+        self.tabWidget.setObjectName("tabWidget")
+        self.headersTableInit()
+        self.dataTableInit()
 
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(870, 750, 100, 30))
@@ -94,15 +76,26 @@ class Ui_MainWindow(object):
     
         self.actionNew = QtWidgets.QAction(MainWindow)
         self.actionNew.setObjectName("actionNew")
+        self.menuFile.addAction(self.actionNew)
+
+        self.actionSave = QtWidgets.QAction(MainWindow)
+        self.actionSave.setObjectName("actionSave")
+        self.menuFile.addAction(self.actionSave)
+
+        self.actionSend = QtWidgets.QAction(MainWindow)
+        self.actionSend.setObjectName("actionSend")
+        self.menuTools.addAction(self.actionSend)
+
 
         self.actionStress = QtWidgets.QAction(MainWindow)
         self.actionStress.setObjectName("actionStress")
-        self.menuFile.addAction(self.actionNew)
         self.menuTools.addAction(self.actionStress)
+
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuTools.menuAction())
 
-        self.actionStress.triggered.connect(self.showStressWindow)
+        self.actionStress.triggered.connect(self.stressTest)
+        self.actionSave.triggered.connect(self.save)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -111,15 +104,75 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "接口测试"))
         self.label.setText(_translate("MainWindow", "路径"))
-        self.label_2.setText(_translate("MainWindow", "参数"))
+        # self.label_2.setText(_translate("MainWindow", "参数"))
         self.pushButton.setText(_translate("MainWindow", "发送"))
         # self.pushButton_1.setText(_translate("MainWindow", "保存"))
         self.menuFile.setTitle(_translate("MainWindow", "文件"))
         self.actionNew.setText(_translate("MainWindow", "新建"))
+        self.actionNew.setShortcut(_translate("MainWindow", "Ctrl+N"))
+        self.actionSave.setText(_translate("MainWindow", "保存"))
+        self.actionSave.setShortcut(_translate("MainWindow", "Ctrl+S"))
         self.menuTools.setTitle(_translate("MainWindow", "工具"))
+        self.actionSend.setText(_translate("MainWindow", "发送请求"))
+        self.actionSend.setShortcut(_translate("MainWindow", "Ctrl+R"))
         self.actionStress.setText(_translate("MainWindow", "压力测试"))
         self.actionStress.setShortcut(_translate("MainWindow", "Ctrl+P"))
+    
+    def headersTableInit(self):
+        self.tab_1 = QtWidgets.QWidget()
+        self.tab_1.setObjectName("tab_1")
+        self.tableWidget_1 = QtWidgets.QTableWidget(self.tab_1)
+        self.tableWidget_1.setGeometry(QtCore.QRect(0, 0, 590, 351))
+        self.tableWidget_1.setObjectName("tableWidget_1")
+        self.tableWidget_1.setColumnCount(2)
+        self.tableWidget_1.setRowCount(10)
 
+        _translate = QtCore.QCoreApplication.translate
+        for i in range(2):
+            self.tableWidget_1.setColumnWidth(i, 283)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_1.setHorizontalHeaderItem(i, item)
+        item = self.tableWidget_1.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Name"))
+        item = self.tableWidget_1.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Value"))
+
+        for i in range(10):
+            self.tableWidget_1.setItem(i, 0, QtWidgets.QTableWidgetItem())
+            self.tableWidget_1.setItem(i, 1, QtWidgets.QTableWidgetItem())
+        self.tabWidget.addTab(self.tab_1, "")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_1), _translate("MainWindow", "头信息"))
+
+
+
+    def dataTableInit(self):
+        self.tab_2 = QtWidgets.QWidget()
+        self.tab_2.setObjectName("tab_2")
+        self.tableWidget_2 = QtWidgets.QTableWidget(self.tab_2)
+        self.tableWidget_2.setGeometry(QtCore.QRect(0, 0, 590, 351))
+        self.tableWidget_2.setObjectName("tableWidget_2")
+        self.tableWidget_2.setColumnCount(2)
+        self.tableWidget_2.setRowCount(10)
+
+        _translate = QtCore.QCoreApplication.translate
+        for i in range(2):
+            self.tableWidget_2.setColumnWidth(i, 283)
+            item = QtWidgets.QTableWidgetItem()
+            self.tableWidget_2.setHorizontalHeaderItem(i, item)
+        item = self.tableWidget_2.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Name"))
+        item = self.tableWidget_2.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Value"))
+
+        for i in range(10):
+            self.tableWidget_2.setItem(i, 0, QtWidgets.QTableWidgetItem())
+            self.tableWidget_2.setItem(i, 1, QtWidgets.QTableWidgetItem())
+        self.tabWidget.addTab(self.tab_2, "")
+
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "参数"))
+
+    
+    
 
         
         

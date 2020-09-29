@@ -37,24 +37,34 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
 
     def getData(self):
-        self.requestDic["method"] = self.comboBox.currentText()
+        self.requestDic["method"] = self.comboBox_1.currentText()
         self.requestDic["url"] = self.lineEdit.text()
         self.requestDic["params"] = {}
-        for i in range(9):
-            if self.tableWidget.item(i, 0).text() != "" and self.tableWidget.item(i, 1).text() != "":
-                key = self.tableWidget.item(i, 0).text()
-                value = self.tableWidget.item(i, 1).text()
+        for i in range(10):
+            if self.tableWidget_2.item(i, 0).text() != "" and self.tableWidget_2.item(i, 1).text() != "":
+                key = self.tableWidget_2.item(i, 0).text()
+                value = self.tableWidget_2.item(i, 1).text()
                 self.requestDic["params"][key] = value       
         self.requestDic["files"] = ""
         return self.requestDic
 
     def save(self):
-        pass
+        headers = {}
+        data = {}
+        url = self.lineEdit.text()
+        for i in range(10):
+            if self.tableWidget_1.item(i, 0).text() != "" and self.tableWidget_1.item(i, 1).text() != "":
+                headers[self.tableWidget_1.item(i, 0).text()] = self.tableWidget_1.item(i, 1).text()
+            if self.tableWidget_2.item(i, 0).text() != "" and self.tableWidget_2.item(i, 1).text() != "":
+                data[self.tableWidget_2.item(i, 0).text()] = self.tableWidget_2.item(i, 1).text()
+        
+
+
     
-    def showStressWindow(self):
-        self.stressWindow = StressWindow()
-        self.stressWindow.setWindowModality(Qt.ApplicationModal)
-        self.stressWindow.show()
+    def stressTest(self):
+        self.web = WebWindow()
+        self.web.setWindowModality(Qt.ApplicationModal)
+        self.web.show()
 
 
         

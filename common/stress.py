@@ -14,7 +14,7 @@ import json
 from locust import HttpUser, task, between
 from common.load import LoadHttp
 
-HTTP = LoadHttp("./stress.json")
+HTTP = LoadHttp("./common/stress.json")
 
 class Stress(HttpUser):
     wait_time = between(0.5, 1.5)

@@ -13,7 +13,8 @@ class Ui_WebWindow(object):
         self.centralwidget = QtWidgets.QWidget(Form)
         self.centralwidget.setObjectName("centralwidget")
 
-        self.browser = QtWebEngineWidgets.QWebEngineView()
+        self.browser = QtWebEngineWidgets.QWebEngineView(self.centralwidget)
+        self.browser.setGeometry(QtCore.QRect(0, 0, 1500, 800))
         self.retranslateUi(Form)
            
     def retranslateUi(self, Form):

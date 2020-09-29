@@ -1,9 +1,0 @@
-{
-    "method": "get",
-    "host": "http://cpi.ufotosoft.com",
-    "path": "/storyart/ncrnau/res/getSecRes",
-    "params":{
-        "refId": "234"
-    },
-    "files":""
-}

@@ -14,7 +14,7 @@ IMAGE_PATH = os.path.join(os.getcwd(), "pic")
 class LoadHttp(object):
 
     def __init__(self, path):
-        with open("path", "r") as f:
+        with open(path, "r") as f:
             content = f.read()
             self.http = json.loads(content)
             self.images = self.getImages()
