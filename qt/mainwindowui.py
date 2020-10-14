@@ -58,6 +58,8 @@ class Ui_MainWindow(object):
 
         self.treeWidget.setColumnCount(1)
         self.treeWidget.setHeaderLabels(["测试集"])
+        self.treeWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.treeWidget.customContextMenuRequested.connect(self.treeRightButtonFunc)
 
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 943, 22))

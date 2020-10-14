@@ -3,13 +3,16 @@
 # @email: none
 # @date: 2020/07/29 16:13
 
+import os, json, re
 from qt.mainwindowui import Ui_MainWindow
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QTableWidget, QTabWidget
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QTableWidget, QTabWidget, QTreeWidgetItem, QMenu, QAction
 from PyQt5.QtCore import  Qt, QRect
 from qt.handler import TreeWidgetHandler
 from common.request import Request
 from qt.responsewindow import ResponseWindow
 from qt.webwindow import WebWindow
+
+
 
 class MainWindow(QMainWindow, Ui_MainWindow):
 
@@ -17,6 +20,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__()
         self.setupUi(self)
         self.requestDic = {}
+        self.initTree()
 
     
     def run(self):
@@ -35,7 +39,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             pass
 
         
-
     def getData(self):
         self.requestDic["method"] = self.comboBox_1.currentText()
         self.requestDic["url"] = self.lineEdit.text()
@@ -49,22 +52,93 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return self.requestDic
 
     def save(self):
+        #保存请求的信息
+        request = {}
         headers = {}
         data = {}
         url = self.lineEdit.text()
+        method = self.comboBox_1.currentText()
         for i in range(10):
             if self.tableWidget_1.item(i, 0).text() != "" and self.tableWidget_1.item(i, 1).text() != "":
                 headers[self.tableWidget_1.item(i, 0).text()] = self.tableWidget_1.item(i, 1).text()
             if self.tableWidget_2.item(i, 0).text() != "" and self.tableWidget_2.item(i, 1).text() != "":
                 data[self.tableWidget_2.item(i, 0).text()] = self.tableWidget_2.item(i, 1).text()
+        host = re.findall(r"(http://|https://)?([^/]*)", url)
+        path = url - host
+        request["headers"] = headers
+        request["data"] = data
+        request["method"] = method
+        request["host"] = host
+        request["path"] = path
+        # request["file"] = False
+
+        with open("./path", "w") as f:
+            jsonStr = json.dumps(request, sort_keys=True, indent=2, ensure_ascii=False)
+            f.write(jsonStr)
         
-
-
-    
+        with open("./common/stress.json", "w") as f:
+            jsonStr = json.dumps(request, sort_keys=True, indent=2, ensure_ascii=False)
+            f.write(jsonStr)
+                  
     def stressTest(self):
         self.web = WebWindow()
         self.web.setWindowModality(Qt.ApplicationModal)
         self.web.show()
+    
+    #treeWidget
+    def getTreeDic(self):
+        #获取文件夹结构
+        tree = {}
+        for root, dirs, files in os.walk("./case"):
+            for dir in dirs:
+                tree[dir] = []
+            for file in files:
+                dirName = root.split("/")[-1]
+                if dirName in tree.keys():
+                    tree[dirName].append(file)
+        return tree
+
+    def initTree(self):
+        #展示文件夹结构
+        tree = self.getTreeDic()
+        for key in tree.keys():
+            root = QTreeWidgetItem(self.treeWidget)
+            root.setText(0, key)
+            for value in tree[key]:
+                name = value.split(".")[0]
+                child = QTreeWidgetItem()
+                child.setText(0, name)
+                root.addChild(child)
+    
+    def treeRightButtonFunc(self, pos):
+        item = self.treeWidget.currentItem()
+        item_1 = self.treeWidget.itemAt()
+
+        if item != None and item_1 != None:
+            menu = QMenu()
+            menu.addAction(QAction("增加", self))
+            menu.addAction(QAction("删除", self))
+            menu.triggered[QAction].connect(self.processTrigger)
+            menu.exec_()
+    
+    def processTrigger(self):
+        pass
+
+    def childNode_del(self):
+        pass
+    
+    def childNode_add(self):
+        pass
+
+    def rootNode_del(self):
+        pass
+
+    def rootNode_new(self):
+        pass
+
+        
+    
+        
 
 
         
