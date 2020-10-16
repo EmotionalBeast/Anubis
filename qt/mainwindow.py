@@ -5,8 +5,10 @@
 
 import os, json, re
 from qt.mainwindowui import Ui_MainWindow
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QTableWidget, QTabWidget, QTreeWidgetItem, QMenu, QAction
+from PyQt5.QtWidgets import (QMainWindow, QMessageBox, QTableWidget, 
+                        QTabWidget, QTreeWidgetItem, QMenu, QAction, QTableWidgetItem)
 from PyQt5.QtCore import  Qt, QRect
+from PyQt5.QtGui import QCursor
 from qt.handler import TreeWidgetHandler
 from common.request import Request
 from qt.responsewindow import ResponseWindow
@@ -110,19 +112,52 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 child.setText(0, name)
                 root.addChild(child)
     
-    def treeRightButtonFunc(self, pos):
+    def treeRightButtonFunc(self):
         item = self.treeWidget.currentItem()
-        item_1 = self.treeWidget.itemAt()
-
-        if item != None and item_1 != None:
-            menu = QMenu()
-            menu.addAction(QAction("增加", self))
-            menu.addAction(QAction("删除", self))
-            menu.triggered[QAction].connect(self.processTrigger)
-            menu.exec_()
+        if item != None:
+            if item.parent() != None:
+                menu = QMenu()
+                menu.addAction(QAction("增加用例", self))
+                menu.addAction(QAction("删除用例", self))
+                menu.triggered[QAction].connect(self.processTrigger)
+                menu.exec_(QCursor.pos())
+            else:
+                menu = QMenu()
+                menu.addAction(QAction("新建项目", self))
+                menu.addAction(QAction("删除项目", self))
+                menu.triggered[QAction].connect(self.processTrigger)
+                menu.exec_(QCursor.pos())
+        
+        
+        
+        
     
     def processTrigger(self):
         pass
+    
+    def childItemClick(self, item, column):
+        if item.parent() != None:
+            path = "./case/" + item.parent().text(0) + "/" + item.text(0) + ".json"
+            self.loadJsonData(path)
+    
+    def loadJsonData(self, path):
+        with open(path, "r") as f:
+            jsonStr = f.read()
+            dic = json.loads(jsonStr, strict = False)
+        self.initTable()
+        self.comboBox_1.setCurrentText(dic["method"])
+        self.lineEdit.setText(dic["host"] + dic["path"])
+        headerKeys = list(dic["headers"].keys())
+        headerValues = list(dic["headers"].values())
+        for i in range(len(headerKeys)):
+            self.tableWidget_1.setItem(i,0, QTableWidgetItem(headerKeys[i]))
+            self.tableWidget_1.setItem(i,1, QTableWidgetItem(str(headerValues[i])))
+
+        dataKeys = list(dic["data"].keys())
+        dataValues = list(dic["data"].values())
+        for i in range(len(dataKeys)):
+            self.tableWidget_2.setItem(i,0, QTableWidgetItem(dataKeys[i]))
+            self.tableWidget_2.setItem(i,1, QTableWidgetItem(str(dataValues[i])))
 
     def childNode_del(self):
         pass

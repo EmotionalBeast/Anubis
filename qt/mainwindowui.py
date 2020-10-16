@@ -60,6 +60,7 @@ class Ui_MainWindow(object):
         self.treeWidget.setHeaderLabels(["测试集"])
         self.treeWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.treeWidget.customContextMenuRequested.connect(self.treeRightButtonFunc)
+        self.treeWidget.itemClicked.connect(self.childItemClick)
 
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 943, 22))
@@ -172,6 +173,19 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab_2, "")
 
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "参数"))
+    
+    def initTable(self):
+        if self.index > 0:
+            self.tabWidget.close()
+            self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
+            self.tabWidget.setGeometry(QtCore.QRect(400, 140, 590, 351))
+            self.tabWidget.setObjectName("tabWidget")
+            self.headersTableInit()
+            self.dataTableInit()
+            self.tabWidget.show()
+        self.index += 1
+        
+
 
     
     

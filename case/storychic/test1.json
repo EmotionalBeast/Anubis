@@ -6,26 +6,14 @@
         "Content-Type": "application/json",
         "sign": "1583998905",
         "cp": "xx.xx",
-        "version": "1",
-        "ifTest": true,
-        "platform": "1",
-        "timeStamp": "1594023046301"
+        "version": "1"
     },
     "data": {
         "timeStamp": "1594023046301",
         "version": "1.0",
         "platform": "1",
         "cp": "x.x.x",
-        "ifTest": true,
-        "styleParams": {
-            "style": "Art01",
-            "requestUrls": [
-                {
-                    "index": "0",
-                    "imgUrl": "http://algo.wiseoel.com/original/ins.story.unfold/200910/ufoto-ae8a1159-8926-431c-a07b-f5516b83ae85.JPG"
-                }
-            ]
-        }
+        "ifTest": true
     },
     "file": true
 }
