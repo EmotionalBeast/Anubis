@@ -14,8 +14,6 @@ from common.request import Request
 from qt.responsewindow import ResponseWindow
 from qt.webwindow import WebWindow
 
-
-
 class MainWindow(QMainWindow, Ui_MainWindow):
 
     def __init__(self):
@@ -65,8 +63,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 headers[self.tableWidget_1.item(i, 0).text()] = self.tableWidget_1.item(i, 1).text()
             if self.tableWidget_2.item(i, 0).text() != "" and self.tableWidget_2.item(i, 1).text() != "":
                 data[self.tableWidget_2.item(i, 0).text()] = self.tableWidget_2.item(i, 1).text()
-        host = re.findall(r"(http://|https://)?([^/]*)", url)
-        path = url - host
+        hosts = re.findall(r"(http://|https://)?([^/]*)", url)[0]
+        host = hosts[0] + hosts[1] 
+        print(host)
+        path = url.replace(host, "")
         request["headers"] = headers
         request["data"] = data
         request["method"] = method
@@ -74,15 +74,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         request["path"] = path
         # request["file"] = False
 
-        with open("./path", "w") as f:
-            jsonStr = json.dumps(request, sort_keys=True, indent=2, ensure_ascii=False)
-            f.write(jsonStr)
+        # with open("./path", "w") as f:
+        #     jsonStr = json.dumps(request, sort_keys=True, indent=2, ensure_ascii=False)
+        #     f.write(jsonStr)
         
         with open("./common/stress.json", "w") as f:
             jsonStr = json.dumps(request, sort_keys=True, indent=2, ensure_ascii=False)
             f.write(jsonStr)
                   
     def stressTest(self):
+        self.save()
         self.web = WebWindow()
         self.web.setWindowModality(Qt.ApplicationModal)
         self.web.show()
@@ -127,10 +128,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 menu.addAction(QAction("删除项目", self))
                 menu.triggered[QAction].connect(self.processTrigger)
                 menu.exec_(QCursor.pos())
-        
-        
-        
-        
+                
     
     def processTrigger(self):
         pass

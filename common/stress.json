@@ -1,31 +1,14 @@
 {
-    "method": "post",
-    "host": "http://cpi-beta.wiseoel.com",
-    "path": "/algo/v1/pic/styleTest",
-    "headers": {
-        "Content-Type": "application/json",
-        "sign": "1583998905",
-        "cp": "xx.xx",
-        "version": "1",
-        "ifTest": true,
-        "platform": "1",
-        "timeStamp": "1594023046301"
-    },
-    "data": {
-        "timeStamp": "1594023046301",
-        "version": "1.0",
-        "platform": "1",
-        "cp": "x.x.x",
-        "ifTest": true,
-        "styleParams": {
-            "style": "Art01",
-            "requestUrls": [
-                {
-                    "index": "0",
-                    "imgUrl": "http://algo.wiseoel.com/original/ins.story.unfold/200910/ufoto-ae8a1159-8926-431c-a07b-f5516b83ae85.JPG"
-                }
-            ]
-        }
-    },
-    "file": true
+  "data": {
+    "page": "1",
+    "pageSize": "999",
+    "pkg": "instagramstory.maker.unfold",
+    "rt": "7, 9, 12",
+    "st": "2",
+    "ver": "1008"
+  },
+  "headers": {},
+  "host": "http://cpi.ufotosoft.com",
+  "method": "get",
+  "path": "/storyart/ncrnau/res/getResourceList"
 }

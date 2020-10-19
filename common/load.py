@@ -22,7 +22,7 @@ class LoadHttp(object):
 
     @property
     def data(self):
-        return self.http["params"]
+        return self.http["data"]
 
     @property
     def headers(self):

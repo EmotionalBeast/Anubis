@@ -19,21 +19,15 @@ HTTP = LoadHttp("./common/stress.json")
 class Stress(HttpUser):
     wait_time = between(0.5, 1.5)
     host = HTTP.host
-
-    def __init__(self):
-        super(Stress, self).__init__()
-        self.path = HTTP.path
-        self.headers = HTTP.headers
-        self.data = HTTP.data
     
     def get(self):
-        self.client.get(self.path, headers=self.headers, params=self.data)
+        self.client.get(HTTP.path, headers=HTTP.headers, params=HTTP.data)
 
     def post(self):
-        self.client.post(self.path, headers=self.headers, data=self.data)
+        self.client.post(HTTP.path, headers=HTTP.headers, data=HTTP.data)
     
     def post_with_file(self):
-        self.client.post(self.path, headers=self.headers, data=self.data, files=HTTP.getRandomImage())
+        self.client.post(HTTP.path, headers=HTTP.headers, data=HTTP.data, files=HTTP.getRandomImage())
 
     @task
     def run(self):
@@ -44,7 +38,7 @@ class Stress(HttpUser):
                 self.post_with_file()
             else:
                 self.post()
-    
+        
 
 
     
