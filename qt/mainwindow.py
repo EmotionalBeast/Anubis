@@ -6,7 +6,7 @@
 import os, json, re
 from qt.mainwindowui import Ui_MainWindow
 from PyQt5.QtWidgets import (QMainWindow, QMessageBox, QTableWidget, 
-                        QTabWidget, QTreeWidgetItem, QMenu, QAction, QTableWidgetItem)
+                        QTabWidget, QTreeWidgetItem, QMenu, QAction, QTableWidgetItem, QMessageBox)
 from PyQt5.QtCore import  Qt, QRect
 from PyQt5.QtGui import QCursor
 from qt.handler import TreeWidgetHandler
@@ -120,18 +120,96 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 menu = QMenu()
                 menu.addAction(QAction("增加用例", self))
                 menu.addAction(QAction("删除用例", self))
-                menu.triggered[QAction].connect(self.processTrigger)
+                menu.addAction(QAction("重命名", self))
+                menu.triggered[QAction].connect(self.caseProcessTrigger)
                 menu.exec_(QCursor.pos())
             else:
                 menu = QMenu()
                 menu.addAction(QAction("新建项目", self))
                 menu.addAction(QAction("删除项目", self))
-                menu.triggered[QAction].connect(self.processTrigger)
+                menu.addAction(QAction("重命名", self))
+                menu.triggered[QAction].connect(self.projectProcessTrigger)
                 menu.exec_(QCursor.pos())
                 
     
-    def processTrigger(self):
+    def caseProcessTrigger(self, item):
+        if item.text() == "增加用例":
+            self.caseAdd()
+        
+        if item.text() == "删除用例":
+            self.caseDel()
+
+        if item.text() == "重命名":
+            self.caseRename()
+    
+    def caseDel(self):
+        item = self.treeWidget.currentItem()
+        parentItem = self.treeWidget.currentItem().parent()
+        path = "./case/" + parentItem.text(0) + "/" + item.text(0) + ".json"
+        if os.path.exists(path):
+            os.remove(path)
+            parentItem.removeChild(item)
+            
+
+    def caseAdd(self): 
+        #先增加节点，再处理文件
+        item = self.treeWidget.currentItem()
+        parentItem = self.treeWidget.currentItem().parent()
+        # path = "./case/" + parentItem.text(0) + "/" + "2" + ".json"
+        # if os.path.exists(path):
+        #     pass
+        # else:
+        #     child = QTreeWidgetItem()
+        #     parentItem.addChild(child)
+
+        #     content =  {"data":{}, "headers":{}, "host":"", "method":"", "path":""}
+        #     with open(path, "w") as f:
+        #         text = json.dumps(content, sort_keys=True, indent=2, ensure_ascii=False)
+        #         f.write(text)
+        child = QTreeWidgetItem()
+        parentItem.addChild(child)
+        print(parentItem.child(parentItem.childCount()-1))
+        self.treeWidget.editItem(parentItem.child(parentItem.childCount()-1))
+    
+    def caseRename(self):
+        item = self.treeWidget.currentItem()
+        parentItem = self.treeWidget.currentItem().parent()
+        self.oldName = item.text(0)
+        self.pathOld = "./case/" + parentItem.text(0) + "/" + item.text(0) + ".json"
+        print(self.pathOld)
+        item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable)
+        self.treeWidget.editItem(item)
+        # pathNew = "./case/" + parentItem.text(0) + "/" + item.text(0) + ".json"
+        
+    
+    def keyPressEvent(self, e):
+        item = self.treeWidget.currentItem()
+        parentItem = self.treeWidget.currentItem().parent()
+        if e.key() == Qt.Key_Enter:
+            if self.treeWidget.isPersistentEditorOpen(item) == False:
+                pathNew = "./case/" + parentItem.text(0) + "/" + item.text(0) + ".json"
+                print(pathNew)
+                if os.path.exists(pathNew):
+                    QMessageBox.information(self, "提示", "名称已存在！请重新取名!")
+                    item.setText(self.oldName)
+                else:
+                    os.rename(self.pathOld, pathNew)
+
+
+    def projectProcessTrigger(self, item):
+        if item.text() == "新建项目":
+            pass
+
+        if item.text() == "删除项目":
+            pass
+            
+
+    def rootNode_del(self):
         pass
+
+    def rootNode_new(self):
+        pass
+        
     
     def childItemClick(self, item, column):
         if item.parent() != None:
@@ -157,17 +235,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.tableWidget_2.setItem(i,0, QTableWidgetItem(dataKeys[i]))
             self.tableWidget_2.setItem(i,1, QTableWidgetItem(str(dataValues[i])))
 
-    def childNode_del(self):
-        pass
     
-    def childNode_add(self):
-        pass
-
-    def rootNode_del(self):
-        pass
-
-    def rootNode_new(self):
-        pass
 
         
     

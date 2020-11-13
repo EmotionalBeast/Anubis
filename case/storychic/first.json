@@ -7,8 +7,9 @@
       "st": "2",
       "ver": "1008"
     },
-    "header": {},
+    "headers": {},
     "host": "http://cpi.ufotosoft.com",
     "method": "get",
     "path": "/storyart/ncrnau/res/getResourceList"
   }
+  

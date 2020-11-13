@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-import json
+import json, os
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 METHOD = ["get", "post"]
@@ -184,6 +184,19 @@ class Ui_MainWindow(object):
             self.dataTableInit()
             self.tabWidget.show()
         self.index += 1
+
+
+# class MyTreeWidget(QtWidgets.QTreeWidget):
+#     def __init__(self):
+#         super(MyTreeWidget, self).__init__()
+    
+#     def closeEditor(self, path):
+#         if os.path.exists(path):
+#             QtWidgets.QMessageBox.information(self, "提示", "名字重复了！")
+#         else:
+#             with open(path, "w") as f:
+#                 text = 
+
         
 
 
