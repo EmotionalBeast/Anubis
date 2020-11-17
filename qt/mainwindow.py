@@ -3,7 +3,7 @@
 # @email: none
 # @date: 2020/07/29 16:13
 
-import os, json, re
+import os, json, re, shutil
 from qt.mainwindowui import Ui_MainWindow
 from PyQt5.QtWidgets import (QMainWindow, QMessageBox, QTableWidget, 
                         QTabWidget, QTreeWidgetItem, QMenu, QAction, QTableWidgetItem, QMessageBox)
@@ -88,6 +88,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.web.setWindowModality(Qt.ApplicationModal)
         self.web.show()
     
+    ###################################################################################################
     #treeWidget
     def getTreeDic(self):
         #获取文件夹结构
@@ -130,6 +131,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 menu.addAction(QAction("重命名", self))
                 menu.triggered[QAction].connect(self.projectProcessTrigger)
                 menu.exec_(QCursor.pos())
+        else:
+            menu = QMenu()
+            menu.addAction(QAction("新建项目", self))
+            menu.triggered[QAction].connect(self.projectProcessTrigger)
+            menu.exec_(QCursor.pos())
                 
     
     def caseProcessTrigger(self, item):
@@ -153,62 +159,132 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def caseAdd(self): 
         #先增加节点，再处理文件
-        item = self.treeWidget.currentItem()
         parentItem = self.treeWidget.currentItem().parent()
-        # path = "./case/" + parentItem.text(0) + "/" + "2" + ".json"
-        # if os.path.exists(path):
-        #     pass
-        # else:
-        #     child = QTreeWidgetItem()
-        #     parentItem.addChild(child)
-
-        #     content =  {"data":{}, "headers":{}, "host":"", "method":"", "path":""}
-        #     with open(path, "w") as f:
-        #         text = json.dumps(content, sort_keys=True, indent=2, ensure_ascii=False)
-        #         f.write(text)
         child = QTreeWidgetItem()
         parentItem.addChild(child)
-        print(parentItem.child(parentItem.childCount()-1))
-        self.treeWidget.editItem(parentItem.child(parentItem.childCount()-1))
+        # self.treeWidget.setCurrentItem(parentItem.child(parentItem.childCount()-1))
+        self.treeWidget.setCurrentItem(child)
+        item = self.treeWidget.currentItem()
+        item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable)
+        self.treeWidget.editItem(item)
+        self.treeWidget.itemChanged.connect(lambda: self.caseAddHandler(item, parentItem))
+    
+    def caseAddHandler(self, item, parentItem):
+        pathNew = "./case/" + parentItem.text(0) + "/" + item.text(0) + ".json"
+        if os.path.exists(pathNew):
+            QMessageBox.information(self, "提示", "名称已存在！请重新取名!")
+            self.treeWidget.itemChanged.disconnect()
+            item.setText(0, "未命名")
+            path = "./case/" + parentItem.text(0) + "/" + item.text(0) + ".json"
+            content =  {"data":{}, "headers":{}, "host":"", "method":"", "path":""}
+            with open(path, "w") as f:
+                text = json.dumps(content, sort_keys=True, indent=2, ensure_ascii=False)
+                f.write(text)
+        else:
+            self.treeWidget.itemChanged.disconnect()
+            content =  {"data":{}, "headers":{}, "host":"", "method":"", "path":""}
+            with open(pathNew, "w") as f:
+                text = json.dumps(content, sort_keys=True, indent=2, ensure_ascii=False)
+                f.write(text)
+        item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+        
     
     def caseRename(self):
         item = self.treeWidget.currentItem()
         parentItem = self.treeWidget.currentItem().parent()
-        self.oldName = item.text(0)
-        self.pathOld = "./case/" + parentItem.text(0) + "/" + item.text(0) + ".json"
-        print(self.pathOld)
+        oldName = item.text(0)
+        pathOld = "./case/" + parentItem.text(0) + "/" + item.text(0) + ".json"
         item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable)
         self.treeWidget.editItem(item)
-        # pathNew = "./case/" + parentItem.text(0) + "/" + item.text(0) + ".json"
+        self.treeWidget.itemChanged.connect(lambda: self.caseRenameHandler(item, parentItem, oldName, pathOld))
         
     
-    def keyPressEvent(self, e):
-        item = self.treeWidget.currentItem()
-        parentItem = self.treeWidget.currentItem().parent()
-        if e.key() == Qt.Key_Enter:
-            if self.treeWidget.isPersistentEditorOpen(item) == False:
-                pathNew = "./case/" + parentItem.text(0) + "/" + item.text(0) + ".json"
-                print(pathNew)
-                if os.path.exists(pathNew):
-                    QMessageBox.information(self, "提示", "名称已存在！请重新取名!")
-                    item.setText(self.oldName)
-                else:
-                    os.rename(self.pathOld, pathNew)
+    def caseRenameHandler(self, item, parentItem, oldName, pathOld):
+        pathNew = "./case/" + parentItem.text(0) + "/" + item.text(0) + ".json"
+        if os.path.exists(pathNew):
+            QMessageBox.information(self, "提示", "名称已存在！请重新取名!")
+            self.treeWidget.itemChanged.disconnect()
+            item.setText(0, oldName)
+        else:
+            self.treeWidget.itemChanged.disconnect()
+            os.rename(pathOld, pathNew)
+        item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
 
-
+    #project
     def projectProcessTrigger(self, item):
         if item.text() == "新建项目":
-            pass
+            self.projectAdd()
 
         if item.text() == "删除项目":
-            pass
+            self.projectDel()
+        
+        if item.text() == "重命名":
+            self.projectRename()
             
 
-    def rootNode_del(self):
-        pass
+    def projectDel(self):
+        item = self.treeWidget.currentItem()
+        path = "./case/" + item.text(0)
+        if os.path.exists(path):
+            shutil.rmtree(path)
+            self.treeWidget.takeTopLevelItem(self.treeWidget.indexOfTopLevelItem(item))
 
-    def rootNode_new(self):
-        pass
+    
+    def projectAdd(self):
+        root = QTreeWidgetItem(self.treeWidget)
+        child = QTreeWidgetItem()
+        child.setText(0, "未命名")
+        root.addChild(child)
+        self.treeWidget.setCurrentItem(root)
+        item = self.treeWidget.currentItem()
+        item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable)
+        self.treeWidget.editItem(item)
+        self.treeWidget.itemChanged.connect(lambda: self.projectAddHandler(item))
+    
+    def projectAddHandler(self, item):
+        path = "./case/" + item.text(0)
+        if os.path.exists(path):
+            path1 = "./case/未命名"
+            os.mkdir(path1)
+            pathFile = path1 + "/未命名.json"
+            content =  {"data":{}, "headers":{}, "host":"", "method":"", "path":""}
+            with open(pathFile, "w") as f:
+                text = json.dumps(content, sort_keys=True, indent=2, ensure_ascii=False)
+                f.write(text)
+            self.treeWidget.itemChanged.disconnect()
+            item.setText(0, "未命名")
+        else:
+            self.treeWidget.itemChanged.disconnect()
+            os.mkdir(path)
+            pathFile = path + "/未命名.json"
+            content =  {"data":{}, "headers":{}, "host":"", "method":"", "path":""}
+            with open(pathFile, "w") as f:
+                text = json.dumps(content, sort_keys=True, indent=2, ensure_ascii=False)
+                f.write(text)
+        item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+
+        
+
+    def projectRename(self):
+        item = self.treeWidget.currentItem()
+        oldName = item.text(0)
+        pathOld = "./case/" + item.text(0)
+        item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable)
+        self.treeWidget.editItem(item)
+        self.treeWidget.itemChanged.connect(lambda: self.projectRenameHandler(item, oldName, pathOld))
+    
+    def projectRenameHandler(self, item, oldName, pathOld):
+        pathNew = "./case/" + item.text(0)
+        if os.path.exists(pathNew):
+            QMessageBox.information(self, "提示", "名称已存在！请重新取名!")
+            self.treeWidget.itemChanged.disconnect()
+            item.setText(0, oldName)
+        else:
+            self.treeWidget.itemChanged.disconnect()
+            os.rename(pathOld, pathNew)
+        item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+
+    #############################################################################################################
         
     
     def childItemClick(self, item, column):
